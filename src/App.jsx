@@ -1,41 +1,31 @@
-import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { ShowProducts } from './components/ShowProducts'
+import { useState, useEffect } from "react";
+import ProductList from "./components/ProductList";
 
 function App() {
-  const [products, setproducts] = useState([])
+  const [products, setProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
 
-  const getProducts = async ()=>{
-    let response = await fetch("https://fakestoreapi.com/products")
-    let data = await response.json()
-    setproducts(data)
-  }
-  
-  useEffect(()=>{
-    getProducts()
-  },[])
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products")
+      .then((res) => res.json())
+      .then((data) => {
+        setProducts(data);
+        
+      })
+      
+  });
 
-  const getnameProducts = ()=>{
-    return <ul>
-      <li>{products[6].title}</li>
-    </ul>
-  }
-  
-  if(products.length == 0)
-    return <>
-    <p>Cargando..</p>
-    </>
+  const getRandomProducts = () => {
+    setDisplayedProducts(products.sort(() => 0.5 - Math.random()).slice(0, 3));
+  };
 
   return (
-    <>
+    <div>
       <h1>Tienda Online</h1>
-      <button onClick={()=>{console.log(products)}}>Ver productos</button>
-      {getnameProducts()}
-      <ShowProducts product={products[4]} />
-    </>
-  )
+      <button onClick={getRandomProducts}>Ver productos</button>
+      <ProductList products={displayedProducts} />
+    </div>
+  );
 }
 
-export default App
+export default App;
